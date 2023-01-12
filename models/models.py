@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, TypedDict
+from typing import TypedDict, Optional, Union, List
 
 
 class PageInfo(TypedDict):
@@ -8,29 +8,46 @@ class PageInfo(TypedDict):
 
 
 class Product(TypedDict):
-    publishdate: datetime
+    publishdate: Optional[datetime]
     date: datetime
-    width: int
-    height: int
-    aspect_ratio: str
+    width: Optional[int]
+    height: Optional[int]
+    aspect_ratio: Optional[str]
     title: str
     id: str
-    type: str
-    keywords: str
-    credit: str
-    country: str
-    city: str
-    unit_name: str
-    branch: str
+    type: Optional[str]
+    keywords: Optional[str]
+    credit: Optional[str]
+    country: Optional[str]
+    city: Optional[str]
+    unit_name: Optional[str]
+    branch: Optional[str]
     timestamp: datetime
-    short_description: str
-    thumbnail: str
-    thumbnail_width: int
-    thumbnail_height: int
-    url: str
+    short_description: Optional[str]
+    thumbnail: Optional[str]
+    thumbnail_width: Optional[int]
+    thumbnail_height: Optional[int]
+    url: Optional[str]
     date_published: datetime
 
 
-class Result(TypedDict):
+class ResolvedProduct(TypedDict):
+    id: str
+    title: str
+    description: str
+    keywords: Optional[str]
+    date_published: datetime
+    unit_name: Optional[str]
+
+
+class SearchResponse(TypedDict):
     page_info: PageInfo
     results: List[Product]
+
+
+class AssetResponse(TypedDict):
+    results: ResolvedProduct
+
+
+class Error(TypedDict):
+    errors: List[str]
