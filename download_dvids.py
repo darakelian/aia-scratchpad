@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 import argparse
 import asyncio
 import json.decoder
@@ -14,6 +14,7 @@ from datetime import datetime, timedelta
 
 import ujson
 
+from helpers import make_date_range
 from models.models import SearchResponse, PageInfo, Product, ResolvedProduct, Error, AssetResponse
 from models.db_models import Product as DbProduct
 
@@ -30,12 +31,6 @@ SECRET_KEY = os.environ.get('DVIDS_SECRET_KEY')
 
 def make_query_string(**query_args) -> str:
     return '?' + '&'.join([f'{key}={value}' for key, value in query_args.items()])
-
-
-def make_date_range(start: datetime, end: datetime) -> Iterator[datetime]:
-    while start <= end:
-        yield start
-        start += timedelta(days=1)
 
 
 def make_page_range(total_results: int, per_page: int) -> Iterator[int]:
