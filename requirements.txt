@@ -1,3 +1,4 @@
 httpx
 ujson
 SQLAlchemy
+jinja2

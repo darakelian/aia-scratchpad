@@ -9,16 +9,8 @@ import ujson
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from helpers import make_date_range, get_safe_datetime
-from models.db_models import Base, Product, Credit, Location, File
-
-
-def path(arg_string: str) -> Path:
-    return Path(arg_string)
-
-
-def sig_date(arg_string: str) -> Optional[datetime]:
-    return datetime.strptime(arg_string, "%Y%m%d")
+from dvids_apps.helpers import make_date_range, get_safe_datetime, path, iso_date, eprint
+from dvids_apps.models.db_models import Base, Product, Credit, Location, File
 
 
 def main() -> int:
@@ -30,17 +22,17 @@ def main() -> int:
                                    help="Path to a zip folder containing DVIDS data (expects folders in YYYYMMDD "
                                         "format)")
     parser.add_argument("--output-file", type=path, help="Path to create database at", required=True)
-    parser.add_argument("--begin", type=sig_date, help="Begin date to convert (YYYYMMDD format)")
-    parser.add_argument("--end", type=sig_date, help="End date to convert (YYYYMMDD format)")
-    parser.add_argument("--date", type=sig_date, help="Single date to convert (YYYYMMDD format)")
+    parser.add_argument("--begin", type=iso_date, help="Begin date to convert (YYYYMMDD format)")
+    parser.add_argument("--end", type=iso_date, help="End date to convert (YYYYMMDD format)")
+    parser.add_argument("--date", type=iso_date, help="Single date to convert (YYYYMMDD format)")
     args = parser.parse_args()
 
     # Additional input validation
     if args.date and (args.begin or args.end):
-        print("Error: cannot specify both --date and one of --begin or --end", file=sys.stderr)
+        eprint("Error: cannot specify both --date and one of --begin or --end")
         return 1
     if args.begin and not args.end:
-        print("Error: must specify --end if --begin is specified", file=sys.stderr)
+        eprint("Error: must specify --end if --begin is specified")
         return 1
 
     if args.date:
@@ -59,14 +51,14 @@ def main() -> int:
             if args.data_dir:
                 path_to_files: Path = args.data_dir.joinpath(date.strftime("%Y%m%d"))
                 if not path_to_files.exists():
-                    print(f"Warning: no path found at {path_to_files}", file=sys.stderr)
+                    eprint(f"Warning: no path found at {path_to_files}")
                     continue
                 for file in path_to_files.iterdir():
                     with open(file, "r", encoding="utf-8") as json_file:
                         try:
                             json_data: dict[str, Any] = ujson.load(json_file)
                         except ujson.JSONDecodeError as e:
-                            print(f"Unable to load json from {file}", file=sys.stderr)
+                            eprint(f"Unable to load json from {file}")
                             raise e
                         # Construct our objects
                         product = Product(

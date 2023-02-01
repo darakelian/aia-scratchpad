@@ -14,9 +14,8 @@ from datetime import datetime, timedelta
 
 import ujson
 
-from helpers import make_date_range
-from models.models import SearchResponse, PageInfo, Product, ResolvedProduct, Error, AssetResponse
-from models.db_models import Product as DbProduct
+from dvids_apps.helpers import make_date_range
+from dvids_apps.models.api_models import SearchResponse, PageInfo, Product, ResolvedProduct, Error, AssetResponse
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -81,12 +80,6 @@ async def get_page_date(client: httpx.AsyncClient, date: datetime, page: int) ->
 
 def valid_product(product: Product) -> bool:
     return 'graphics' not in product['id'] and 'publication_issue' not in product['id']
-
-
-def make_db_product(product: ResolvedProduct) -> DbProduct:
-    return DbProduct(id=product['id'], title=product['title'],
-                     description=product['description'].replace('\n', ''), keywords=product.get('keywords', 'None'),
-                     date_published=product['date_published'], unit_name=product.get('unit_name', 'None'))
 
 
 async def get_date_data(date: datetime) -> list[ResolvedProduct]:

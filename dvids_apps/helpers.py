@@ -1,5 +1,7 @@
+import sys
 from datetime import datetime, timedelta
-from typing import Iterator, Any
+from pathlib import Path
+from typing import Iterator, Any, Optional
 
 
 def make_date_range(start: datetime, end: datetime) -> Iterator[datetime]:
@@ -18,3 +20,15 @@ def get_safe_datetime(data_dict: dict[str, Any], key_name: str) -> datetime:
         return datetime.fromisoformat(val)
     except ValueError or TypeError:
         return datetime(1970, 1, 1, 0, 0, 0)
+
+
+def path(arg_string: str) -> Path:
+    return Path(arg_string)
+
+
+def iso_date(arg_string: str) -> Optional[datetime]:
+    return datetime.strptime(arg_string, "%Y%m%d")
+
+
+def eprint(*args, sep=' ', end='\n') -> None:
+    print(*args, sep=sep, end=end, file=sys.stderr)
