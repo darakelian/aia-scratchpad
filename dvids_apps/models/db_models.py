@@ -22,6 +22,7 @@ class Product(Base):
     unit_name = Column(String, nullable=True)
     url = Column(String, nullable=True)
     virin = Column(String, nullable=True)
+    body = Column(String, nullable=True)
 
     def __repr__(self) -> str:
         return f"<Product(id='{self.id}', title='{self.title}', description='{self.description}'," \

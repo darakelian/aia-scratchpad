@@ -2,3 +2,5 @@ httpx
 ujson
 SQLAlchemy
 jinja2
+openai
+spacy

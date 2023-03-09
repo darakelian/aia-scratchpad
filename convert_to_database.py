@@ -73,7 +73,8 @@ def main() -> int:
                             title=json_data.get("title"),
                             unit_name=json_data.get("unit_name"),
                             url=json_data.get("url"),
-                            virin=json_data.get("virin")
+                            virin=json_data.get("virin"),
+                            body=json_data.get("body")
                         )
                         for credit_data in json_data.get("credits", []):
                             credit = Credit(
